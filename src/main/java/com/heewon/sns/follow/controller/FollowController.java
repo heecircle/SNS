@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.heewon.sns.common.util.TimeTrace;
 import com.heewon.sns.follow.dto.FollowCountInfoDto;
 import com.heewon.sns.follow.dto.FollowInfoResponseDto;
 import com.heewon.sns.follow.dto.FollowRequestDto;
@@ -28,6 +29,7 @@ public class FollowController {
 		followService.follow(requestDto.getFollowerId(), requestDto.getFolloweeId());
 	}
 
+	@TimeTrace
 	@GetMapping("/list")
 	public List<FollowInfoResponseDto> getFollowerList(@RequestParam Long userId) {
 		return followService.getFollowInfo(userId);

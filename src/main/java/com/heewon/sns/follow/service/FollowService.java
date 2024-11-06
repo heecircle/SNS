@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
 
+import com.heewon.sns.common.util.TimeTrace;
 import com.heewon.sns.follow.domain.Follow;
 import com.heewon.sns.follow.dto.FollowCountInfoDto;
 import com.heewon.sns.follow.dto.FollowInfoResponseDto;
@@ -29,6 +30,7 @@ public class FollowService {
 		followRepository.save(Follow.builder().follower(follower).followed(followee).build());
 	}
 
+	@TimeTrace
 	public List<FollowInfoResponseDto> getFollowInfo(Long userId) {
 		return followRepository.findFollowById(userId);
 	}
