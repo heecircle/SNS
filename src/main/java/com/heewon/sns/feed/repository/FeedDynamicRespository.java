@@ -1,2 +1,4 @@
-package com.heewon.sns.feed.repository;public class FeedDynamicRespository {
+package com.heewon.sns.feed.repository;
+
+public class FeedDynamicRespository {
 }
