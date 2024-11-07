@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.webjars.NotFoundException;
 
 import com.heewon.sns.feed.domain.Feed;
 import com.heewon.sns.feed.dto.FeedCreateRequestDto;
@@ -57,6 +58,16 @@ public class FeedController {
 	@PostMapping(value = "/like")
 	public void like(@RequestBody FeedLikeRequestDto requestDto) {
 		feedService.createLike(requestDto.getUserId(), requestDto.getFeedId());
+	}
+
+	@GetMapping(value = "/search")
+	public List<FeedReadResponseDto> searchFeed(@RequestParam(required = false) String keyword,
+		@RequestParam Long userId,
+		@RequestParam int page,
+		@RequestParam int size) throws Exception {
+		if (keyword == null)
+			throw new NotFoundException("검색어를 입력하세요");
+		return feedService.searchFeed(userId, keyword, PageRequest.of(page, size));
 	}
 
 }
