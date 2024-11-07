@@ -13,13 +13,22 @@ import com.heewon.sns.follow.dto.FollowInfoResponseDto;
 @Repository
 public interface FollowRepository extends JpaRepository<Follow, Long> {
 
-	@Query(value = "select DISTINCT new com.heewon.sns.follow.dto.FollowInfoResponseDto(follow.follower.id, follow.follower.nickname, follow.follower.imgUrl) from Follow follow where follow.followed.id = :id")
+	@Query(value =
+		"SELECT new com.heewon.sns.follow.dto.FollowInfoResponseDto(user.id, user.nickname, user.imgUrl, "
+			+ "sum(case when follow1.id.userId = follow2.id.followId then 1 else 0 end)"
+			+ ") "
+			+ "FROM Follow follow1 "
+			+ "left join Follow follow2 on follow1.id.followId = follow2.id.userId "
+			+ "left join  User user on follow1.id.followId = user.id "
+			+ "where follow1.id.userId = :id "
+			+ "group by follow1.id.userId, follow1.id.followId"
+	)
 	List<FollowInfoResponseDto> findFollowById(@Param("id") Long id);
 
-	Integer countDistinctByFollowed_Id(Long followedId);
+	Integer countDistinctById_UserId(Long userId);
 
-	Integer countDistinctByFollower_Id(Long followerId);
+	Integer countDistinctById_FollowId(Long followId);
 
-	void deleteAllByFollowed_IdAndFollower_Id(Long followedId, Long followerId);
+	void deleteFollowsById_FollowIdAndId_UserId(Long id, Long userId);
 
 }
