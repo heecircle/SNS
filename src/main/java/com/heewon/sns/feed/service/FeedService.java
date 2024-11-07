@@ -88,23 +88,16 @@ public class FeedService {
 		feedLikeRepository.save(feedLike);
 	}
 
-	public List<FeedReadResponseDto> searchFeed(String keyword, Pageable pageable) throws Exception {
+	public List<FeedReadResponseDto> searchFeed(Long userId, String keyword, Pageable pageable) throws Exception {
 		if (keyword.isEmpty()) {
 			throw new NotFoundException("검색어를 입력하세요");
 		}
 
-		Page<Feed> feeds = feedRepository.findFeedsByContentContainingIgnoreCaseOrTitleContainingIgnoreCase(
-			keyword,
+		Page<FeedReadResponseDto> feeds = feedRepository.findFeedsByContentContainingIgnoreCaseAndTitleContainingIgnoreCaseAndAuthor_UserId(
+			userId,
+			"%" + keyword + "%",
 			keyword, pageable);
 
-		return feeds.stream().map(feed -> FeedReadResponseDto.builder()
-			.id(feed.getId())
-			.author(feed.getAuthor().getNickname())
-			.title(feed.getTitle())
-			.content(feed.getContent())
-			.imgUrl(feed.getImgUrl()
-			).build()
-
-		).collect(Collectors.toList());
+		return feeds.stream().collect(Collectors.toList());
 	}
 }

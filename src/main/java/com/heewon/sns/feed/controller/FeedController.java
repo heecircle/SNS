@@ -62,11 +62,12 @@ public class FeedController {
 
 	@GetMapping(value = "/search")
 	public List<FeedReadResponseDto> searchFeed(@RequestParam(required = false) String keyword,
+		@RequestParam Long userId,
 		@RequestParam int page,
 		@RequestParam int size) throws Exception {
 		if (keyword == null)
 			throw new NotFoundException("검색어를 입력하세요");
-		return feedService.searchFeed(keyword, PageRequest.of(page, size));
+		return feedService.searchFeed(userId, keyword, PageRequest.of(page, size));
 	}
 
 }
