@@ -1,35 +1,20 @@
 package com.heewon.sns.follow.domain;
 
-import com.heewon.sns.user.domain.User;
-
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
+@Table(indexes = {@Index(name = "idx_userId", columnList = "userId"),
+	@Index(name = "idx_followerId", columnList = "followId")})
 public class Follow {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
-	@JoinColumn
-	@ManyToOne(fetch = FetchType.LAZY)
-	private User follower;
-
-	@JoinColumn
-	@ManyToOne(fetch = FetchType.LAZY)
-	private User followed;
-
-	@Builder
-	public Follow(User follower, User followed) {
-		this.follower = follower;
-		this.followed = followed;
-	}
+	@EmbeddedId
+	FollowId id;
 }
