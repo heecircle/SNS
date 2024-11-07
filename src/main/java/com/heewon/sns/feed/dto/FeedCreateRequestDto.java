@@ -5,9 +5,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @Builder
+@ToString
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class FeedCreateRequestDto {
@@ -19,4 +21,5 @@ public class FeedCreateRequestDto {
 	@NonNull
 	private Long authorId;
 
+	private String hashtagString;
 }

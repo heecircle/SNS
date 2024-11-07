@@ -21,6 +21,8 @@ import com.heewon.sns.feed.dto.FeedReadResponseDto;
 import com.heewon.sns.feed.repository.FeedCheckRepository;
 import com.heewon.sns.feed.repository.FeedLikeRepository;
 import com.heewon.sns.feed.repository.FeedRepository;
+import com.heewon.sns.hashtag.domain.Hashtag;
+import com.heewon.sns.hashtag.repository.HashtagRepository;
 import com.heewon.sns.user.domain.User;
 import com.heewon.sns.user.repository.UserRepository;
 
@@ -34,15 +36,20 @@ public class FeedService {
 	private final FeedCheckRepository checkRepository;
 	private final UserRepository userRepository;
 	private final FeedLikeRepository feedLikeRepository;
-
+	private final HashtagRepository hashtagRepository;
 	private final AWSS3 s3Uploader = new AWSS3();
 
 	public Feed writeFeed(FeedCreateRequestDto requestDto, MultipartFile image) throws Exception {
 		String imgUrl = null;
-		if (image != null) {
+		if (image.getSize() != 0) {
 			imgUrl = s3Uploader.upload(image);
 		}
+		System.out.println(imgUrl);
+
 		User user = userRepository.findById(requestDto.getAuthorId()).orElse(null);
+		if (user == null) {
+			throw new NotFoundException("존재하지 않는 사용자입니다.");
+		}
 		Feed feed = Feed.builder()
 			.title(requestDto.getTitle())
 			.content(requestDto.getContent())
@@ -50,7 +57,13 @@ public class FeedService {
 			.imgUrl(imgUrl).
 			build();
 
-		return feedRepository.save(feed);
+		feedRepository.save(feed);
+
+		for (String hashtag : requestDto.getHashtagString().split(" ")) {
+			hashtagRepository.save(new Hashtag(feed, hashtag));
+		}
+
+		return feed;
 	}
 
 	public List<FeedReadResponseDto> readFeed(Long userId, Pageable pageable) throws Exception {
@@ -80,7 +93,9 @@ public class FeedService {
 		if (feed == null) {
 			throw new NotFoundException("존재하지 않는 피드입니다");
 		}
-
+		if (feed.getAuthor().getId().equals(user.getId())) {
+			throw new NotFoundException("자신의 피드는 좋아요를 누를 수 없습니다.");
+		}
 		if (user == null) {
 			throw new NotFoundException("존재하지 않는 사용자입니다.");
 		}
