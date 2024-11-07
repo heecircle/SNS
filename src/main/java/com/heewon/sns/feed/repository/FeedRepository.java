@@ -21,4 +21,5 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
 		+ "left join User user on user.id = feed.author.id where follow.follower.id = :id")
 	Page<FeedReadResponseDto> findFeedById(@Param("id") Long id, Pageable pageable);
 
+	Feed findFeedById(Long id);
 }

@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -15,7 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.heewon.sns.feed.domain.Feed;
 import com.heewon.sns.feed.dto.FeedCreateRequestDto;
+import com.heewon.sns.feed.dto.FeedLikeRequestDto;
 import com.heewon.sns.feed.dto.FeedReadResponseDto;
+import com.heewon.sns.feed.repository.FeedLikeRepository;
 import com.heewon.sns.feed.service.FeedService;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FeedController {
 	private final FeedService feedService;
+	private final FeedLikeRepository feedLikeRepository;
 
 	@PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Feed createFeed(@RequestPart(name = "requestDto") FeedCreateRequestDto requestDto,
@@ -49,4 +53,10 @@ public class FeedController {
 		}
 		return new ArrayList<>();
 	}
+
+	@PostMapping(value = "/like")
+	public void like(@RequestBody FeedLikeRequestDto requestDto) {
+		feedService.createLike(requestDto.getUserId(), requestDto.getFeedId());
+	}
+
 }
