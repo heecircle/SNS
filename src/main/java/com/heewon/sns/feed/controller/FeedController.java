@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.heewon.sns.common.util.TimeTrace;
 import com.heewon.sns.feed.domain.Feed;
 import com.heewon.sns.feed.dto.FeedCreateRequestDto;
 import com.heewon.sns.feed.dto.FeedLikeRequestDto;
@@ -22,7 +23,9 @@ import com.heewon.sns.feed.repository.FeedLikeRepository;
 import com.heewon.sns.feed.service.FeedService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 @RestController
 @RequestMapping("/feed")
 @RequiredArgsConstructor
@@ -34,6 +37,7 @@ public class FeedController {
 	public Feed createFeed(@RequestPart(name = "requestDto") FeedCreateRequestDto requestDto,
 		@RequestPart(name = "file") MultipartFile file) {
 		try {
+			System.out.println(requestDto.getHashtagString());
 			return feedService.writeFeed(requestDto, file);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -59,4 +63,19 @@ public class FeedController {
 		feedService.createLike(requestDto.getUserId(), requestDto.getFeedId());
 	}
 
+<<<<<<< Updated upstream
+=======
+	@TimeTrace
+	@GetMapping(value = "/search")
+	public List<FeedReadResponseDto> searchFeed(@RequestParam(required = false) String keyword,
+		@RequestParam Long userId,
+		@RequestParam int page,
+		@RequestParam int size) throws Exception {
+		log.info("=================" + keyword + " search called================");
+		if (keyword == null)
+			throw new NotFoundException("검색어를 입력하세요");
+		return feedService.searchFeed(userId, keyword, PageRequest.of(page, size));
+	}
+
+>>>>>>> Stashed changes
 }
