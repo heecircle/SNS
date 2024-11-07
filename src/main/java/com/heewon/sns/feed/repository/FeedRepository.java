@@ -22,4 +22,7 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
 	Page<FeedReadResponseDto> findFeedById(@Param("id") Long id, Pageable pageable);
 
 	Feed findFeedById(Long id);
+
+	Page<Feed> findFeedsByContentContainingIgnoreCaseOrTitleContainingIgnoreCase(String content,
+		String title, Pageable pageable);
 }
