@@ -17,8 +17,8 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
 	@Query(value = "SELECT " +
 		"new com.heewon.sns.feed.dto.FeedReadResponseDto(feed.id, feed.title, user.nickname, feed.content, feed.imgUrl, "
 		+ "feed.updatedAt) "
-		+ "from Feed feed right join Follow follow on follow.followed.id = feed.author.id "
-		+ "left join User user on user.id = feed.author.id where follow.follower.id = :id")
+		+ "from Feed feed "
+		+ "left join User user on user.id = feed.author.id where feed.author.id in (select follow.id.followId from Follow follow where follow.id.userId = :id)")
 	Page<FeedReadResponseDto> findFeedById(@Param("id") Long id, Pageable pageable);
 
 }
