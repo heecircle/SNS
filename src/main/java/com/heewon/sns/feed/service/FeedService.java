@@ -2,6 +2,7 @@ package com.heewon.sns.feed.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -100,5 +101,18 @@ public class FeedService {
 		}
 		FeedLike feedLike = FeedLike.builder().id(new FeedLikeId(userId, feedId)).feed(feed).user(user).build();
 		feedLikeRepository.save(feedLike);
+	}
+
+	public List<FeedReadResponseDto> searchFeed(Long userId, String keyword, Pageable pageable) throws Exception {
+		if (keyword.isEmpty()) {
+			throw new NotFoundException("검색어를 입력하세요");
+		}
+
+		Page<FeedReadResponseDto> feeds = feedRepository.findFeedsByContentContainingIgnoreCaseAndTitleContainingIgnoreCaseAndAuthor_UserId(
+			userId,
+			"%" + keyword + "%",
+			keyword, pageable);
+
+		return feeds.stream().collect(Collectors.toList());
 	}
 }

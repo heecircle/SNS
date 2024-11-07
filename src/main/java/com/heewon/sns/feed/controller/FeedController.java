@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.webjars.NotFoundException;
 
 import com.heewon.sns.common.util.TimeTrace;
 import com.heewon.sns.feed.domain.Feed;
@@ -63,8 +64,6 @@ public class FeedController {
 		feedService.createLike(requestDto.getUserId(), requestDto.getFeedId());
 	}
 
-<<<<<<< Updated upstream
-=======
 	@TimeTrace
 	@GetMapping(value = "/search")
 	public List<FeedReadResponseDto> searchFeed(@RequestParam(required = false) String keyword,
@@ -76,6 +75,4 @@ public class FeedController {
 			throw new NotFoundException("검색어를 입력하세요");
 		return feedService.searchFeed(userId, keyword, PageRequest.of(page, size));
 	}
-
->>>>>>> Stashed changes
 }
