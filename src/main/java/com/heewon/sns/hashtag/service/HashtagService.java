@@ -36,4 +36,10 @@ public class HashtagService {
 			hashtagRankRepository.save(topHashtag);
 		}
 	}
+
+	public List<TopHashtag> getTopHashtag() {
+		System.out.println(hashtagRankRepository.findTopHashtag().toString());
+		return hashtagRankRepository.findTopHashtag();
+	}
+
 }
