@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.heewon.sns.feed.dto.FeedReadResponseDto;
+import com.heewon.sns.hashtag.domain.TopHashtag;
 import com.heewon.sns.hashtag.service.HashtagService;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,10 @@ public class HashtagController {
 	public List<FeedReadResponseDto> searchHashtag(String keyword, int page, int size, Long userId) {
 		log.info("================== hashtag called keyword : " + keyword + " ===================");
 		return hashtagService.findFeedByHashtag(keyword, userId, PageRequest.of(page, size));
+	}
 
+	@GetMapping("/top")
+	public List<TopHashtag> topHashtag() {
+		return hashtagService.getTopHashtag();
 	}
 }
